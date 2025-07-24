@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# This script ensures Nginx is installed, properly linked, and listening on port 80
+
+# Install Nginx if not installed
+apt-get update -y
+apt-get install -y nginx
+
+# Remove any existing broken or incorrect symlink
+rm -f /etc/nginx/sites-enabled/default
+
+# Recreate the correct symbolic link
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
+# Restart Nginx to apply configuration
+service nginx restart
+
+# Test if Nginx is listening on port 80
+curl 0:80
+
