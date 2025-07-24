@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# Install ufw if not already installed
+sudo apt-get update -y
+sudo apt-get install -y ufw
+
+# Deny all incoming connections by default
+sudo ufw default deny incoming
+
+# Allow all outgoing connections by default
+sudo ufw default allow outgoing
+
+# Allow SSH (port 22)
+sudo ufw allow 22/tcp
+
+# Allow HTTP (port 80)
+sudo ufw allow 80/tcp
+
+# Allow HTTPS (port 443)
+sudo ufw allow 443/tcp
+
+# Enable the firewall (confirm with 'y' if prompted)
+sudo ufw enable
+
+# Optional: Show status with rules
+sudo ufw status verbose
+
