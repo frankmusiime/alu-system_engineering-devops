@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 # This script configures Nginx to run as the nginx user on port 8080
 
-# Change nginx user in the main config
+# Change nginx user in main config
 sed -i 's/^user .*/user nginx;/' /etc/nginx/nginx.conf
 
-# Change default site port from 80 to 8080
+# Update default site config to listen on port 8080
 sed -i 's/listen 80 default_server;/listen 8080 default_server;/' /etc/nginx/sites-available/default
 sed -i 's/listen \[::\]:80 default_server;/listen [::]:8080 default_server;/' /etc/nginx/sites-available/default
 
 # Test and restart nginx
 nginx -t && service nginx restart
 
-# Log output expected by checker
+# shellcheck disable=SC2009
 ps aux | grep '[n]ginx' > /tmp/output
 netstat -tuln | grep ':8080' >> /tmp/output
 
