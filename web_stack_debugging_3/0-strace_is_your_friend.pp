@@ -1,4 +1,4 @@
-fest to fix Apache 500 error caused by missing index.php file
+# fest to fix Apache 500 error caused by missing index.php file
 
 file { '/var/www/html/index.php':
   ensure  => file,
