@@ -1,11 +1,8 @@
-# fest to fix Apache 500 error caused by missing index.php file
+# Puppet manifest to fix Apache 500 error by restoring the missing WordPress symlink
 
-file { '/var/www/html/index.php':
-  ensure  => file,
-  content => "<?php\nphpinfo();\n",
-  owner   => 'www-data',
-  group   => 'www-data',
-  mode    => '0644',
+file { '/var/www/html':
+  ensure => 'link',
+  target => '/var/www/wordpress',
 }
 
 service { 'apache2':
