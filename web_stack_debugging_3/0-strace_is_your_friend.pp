@@ -5,7 +5,7 @@ package { 'php5-mysql':
 }
 
 service { 'apache2':
-  ensure     => running,
-  enable     => true,
-  subscribe  => Package['php5-mysql'],
+  ensure    => running,
+  enable    => true,
+  subscribe => Package['php5-mysql'],
 }
