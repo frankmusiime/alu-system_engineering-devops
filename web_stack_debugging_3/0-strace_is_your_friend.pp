@@ -1,11 +1,11 @@
-# This Puppet manifest fixes a 500 error by restoring the symlink from /var/www/html to /var/www/wordpress, ensuring WordPress loads correctly
+# This Puppet manifest installs the missing PHP MySQL module to fix Apache 500 error on WordPress
 
-file { '/var/www/html':
-  ensure => 'link',
-  target => '/var/www/wordpress',
+package { 'php5-mysql':
+  ensure => installed,
 }
 
 service { 'apache2':
-  ensure => running,
-  enable => true,
+  ensure     => running,
+  enable     => true,
+  subscribe  => Package['php5-mysql'],
 }
