@@ -1,23 +1,24 @@
 #!/usr/bin/env bash
-# Configures Nginx to run as the nginx user and listen on port 8080
+# Configures Nginx to run as nginx user on port 8080
 
-# Make sure nginx user exists
+# Ensure nginx user exists
 id nginx &>/dev/null || useradd --system --no-create-home --shell /usr/sbin/nologin nginx
 
-# Ensure user nginx is set
+# Fix user directive
 if grep -q '^user' /etc/nginx/nginx.conf; then
-    sed -i 's/^user .*/user nginx;/' /etc/nginx/nginx.conf
+  sed -i 's/^user.*/user nginx;/' /etc/nginx/nginx.conf
 else
-    sed -i '1iuser nginx;' /etc/nginx/nginx.conf
+  sed -i '1iuser nginx;' /etc/nginx/nginx.conf
 fi
 
-# Change all listen 80 to listen 8080
+# Change all listen ports from 80 to 8080 (IPv4 and IPv6)
 find /etc/nginx -type f -exec sed -i 's/listen 80 default_server;/listen 8080 default_server;/g' {} +
 find /etc/nginx -type f -exec sed -i 's/listen 80;/listen 8080;/g' {} +
+find /etc/nginx -type f -exec sed -i 's/listen \[::\]:80;/listen [::]:8080;/g' {} +
 
-# Restart nginx
-service nginx restart
+# Restart Nginx
+nginx -t && service nginx restart
 
-# Confirm and output running processes to required files
+# Output processes to files
 ps aux | grep '[n]ginx' > /tmp/output
 ps aux | grep '[n]ginx' > /tmp/1596_output
