@@ -1,6 +1,21 @@
-# This is Puppet manifest fixes a high rate of failed requests by configuring Nginx properly
+# This Puppet manifest installs and configures Nginx to fix failed requests under load
 
-exec { 'fix--for-nginx':
-  command => 'echo "Hello World!" > /var/www/html/index.html',
+package { 'nginx':
+  ensure => installed,
 }
 
+file { '/var/www/html/index.html':
+  ensure  => file,
+  content => '<!DOCTYPE html><html><head><title>OK</title></head><body><h1>Hello from Nginx</h1></body></html>',
+  owner   => 'www-data',
+  group   => 'www-data',
+  mode    => '0644',
+  require => Package['nginx'],
+}
+
+service { 'nginx':
+  ensure     => running,
+  enable     => true,
+  require    => Package['nginx'],
+  subscribe  => File['/var/www/html/index.html'],
+}
