@@ -1,21 +1,14 @@
-# This Puppet manifest installs and configures Nginx to fix failed requests under load
+# This manuscript increases the amount of traffic an Nginx server can handle
 
-package { 'nginx':
-  ensure => installed,
+# Increase the ULIMIT of the default file
+file { 'fix-for-nginx':
+  ensure  => 'file',
+  path    => '/etc/default/nginx',
+  content => inline_template('<%= File.read("/etc/default/nginx").gsub(/15/, "4096") %>'),
 }
 
-file { '/var/www/html/index.html':
-  ensure  => file,
-  content => '<!DOCTYPE html><html><head><title>OK</title></head><body><h1>Hello from Nginx</h1></body></html>',
-  owner   => 'www-data',
-  group   => 'www-data',
-  mode    => '0644',
-  require => Package['nginx'],
-}
-
-service { 'nginx':
-  ensure     => running,
-  enable     => true,
-  require    => Package['nginx'],
-  subscribe  => File['/var/www/html/index.html'],
+# Restart Nginx
+-> exec { 'nginx-restart':
+  command => 'nginx restart',
+  path    => '/etc/init.d/',
 }
