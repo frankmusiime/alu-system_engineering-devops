@@ -1,11 +1,10 @@
-# This Puppet manifest installs the missing PHP MySQL module to fix Apache 500 error on WordPress
+# A puppet manuscript to replace a line in a file on a server
 
-package { 'php5-mysql':
-  ensure => installed,
-}
+$file_to_edit = '/var/www/html/wp-settings.php'
 
-exec { 'restart-apache':
-  command     => '/etc/init.d/apache2 restart',
-  refreshonly => true,
-  subscribe   => Package['php5-mysql'],
+#replace line containing "phpp" with "php"
+
+exec { 'replace_line':
+  command => "sed -i 's/phpp/php/g' ${file_to_edit}",
+  path    => ['/bin','/usr/bin']
 }
